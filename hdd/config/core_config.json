@@ -1,0 +1,18 @@
+{
+    "providers": [],
+    "aliases": {},
+    "bootstrappers": [
+        "hdd.bootstrap.RegisterAlias",
+        "hdd.bootstrap.RegisterProviders",
+        "hdd.bootstrap.BootProviders"
+    ],
+    "db": {
+        "connector": "",
+        "host": "",
+        "port": "",
+        "database": "",
+        "username": "",
+        "password": "",
+        "format": ""
+    }
+}
