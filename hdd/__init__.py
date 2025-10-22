@@ -1,3 +1,3 @@
-from hdd.Core import core, get_core
+from hdd.Core import core
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
