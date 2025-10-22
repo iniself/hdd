@@ -47,10 +47,11 @@ class ConfigAbs(object, metaclass=ABCMeta):
         for k in two:
             if k in one and isinstance(one[k], dict) and isinstance(two[k], dict):
                 one[k] = self.__merge(one[k], two[k])
-            elif two[k] or (not two[k] and two[k] is None):
+            elif k in one and isinstance(one[k], list) and isinstance(two[k], list):
+                one[k] = one[k] + [x for x in two[k] if x not in one[k]]
+            elif two[k] is not None:
                 one[k] = two[k]
-            # else:
-            #     one[k] = two[k]
+
         return one
 
     @abstractmethod
