@@ -77,7 +77,7 @@ def main(**kwargs):
 
         core_config = read_template("config/core_config.json")
 
-        print(f"Let's init {parser.prog} project...", end="\n\n")
+        print(f"Init {parser.prog} project, Done", end="\n\n")
 
         # connector = (
         #     input("connector(mysql/sqLite/postgresql/...) :  ").lower() or "mysql"
