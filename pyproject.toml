@@ -9,7 +9,7 @@ packages = ["hdd"]
 version = {attr = "hdd.__version__"}
 
 [project]
-name = "HDD"
+name = "hdd"
 dynamic = ["version"]
 description = "A tools package"
 authors = [{ name = "Metaer" }]
@@ -18,7 +18,7 @@ license = { text = "MIT" }
 requires-python = ">=3.10"
 
 dependencies = [
-    
+    "tomlkit"
 ]
 
 [project.scripts]
