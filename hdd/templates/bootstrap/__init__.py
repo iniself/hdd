@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; py-indent-offset:4 -*-
 #
-# Author: Metaer @ 2023/3/1  
+# Author: Metaer @ 2023/3/1
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import (absolute_import, division, print_function, unicode_literals)
-
-from .register_alias import *
-from .register_providers import *
-from .boot_providers import *
+from __future__ import absolute_import, division, print_function, unicode_literals

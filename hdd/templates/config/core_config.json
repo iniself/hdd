@@ -1,15 +1,7 @@
 {
-    "providers": [
-
-    ],
-    "aliases": {
-        
-    },
-    "bootstrappers": [
-        "bootstrap.RegisterAlias",
-        "bootstrap.RegisterProviders",
-        "bootstrap.BootProviders"
-    ],
+    "providers": [],
+    "aliases": {},
+    "bootstrappers": [],
     "db": {
         "connector": "",
         "host": "",
