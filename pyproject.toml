@@ -5,11 +5,25 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["hdd"]
 
+[tool.setuptools.dynamic]
+version = {attr = "hdd.__version__"}
+
 [project]
 name = "HDD"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A tools package"
 authors = [{ name = "Metaer" }]
 readme = ""
 license = { text = "MIT" }
 requires-python = ">=3.10"
+
+dependencies = [
+    
+]
+
+[project.scripts]
+hdd = "hdd.command:main"
+
+
+[project.optional-dependencies]
+dev = []
