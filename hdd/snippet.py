@@ -22,6 +22,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import inspect, importlib, threading, os, json, pprint, re
 
 DIRECTORY_SEPARATOR = os.sep
+import inspect
+import importlib
+from pathlib import Path
 
 
 def has_key(obj, k):
@@ -207,3 +210,22 @@ def here(something, do_print=True):
         )
         pprint.pprint(something)
         print("\r\n")
+
+
+def detect_caller_package_path():
+    """
+    检测是谁 import 了 hdd，然后返回该包的根路径。
+    """
+    stack = inspect.stack()
+    for frame_info in stack:
+        module = inspect.getmodule(frame_info.frame)
+        if not module:
+            continue
+        mod_name = module.__name__
+        if not mod_name.startswith("hdd"):
+            try:
+                mod = importlib.import_module(mod_name.split(".")[0])
+                if hasattr(mod, "__file__"):
+                    return Path(mod.__file__).parent
+            except Exception:
+                return None

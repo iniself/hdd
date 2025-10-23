@@ -22,7 +22,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys
 from pathlib import Path
 from .service import Core
-
+from hdd.snippet import detect_caller_package_path
 
 aliases = {
     "config": "hdd.service.config.ConfigManager",
@@ -34,7 +34,7 @@ aliases = {
 
 try:
     package_absolute_path = Path(__file__).absolute().parent
-    project_absolute_path = Path.cwd()
+    project_absolute_path = detect_caller_package_path() or Path.cwd()
 
     sys.path.append(str(project_absolute_path))
 except:
