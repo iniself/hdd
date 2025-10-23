@@ -3,6 +3,7 @@
 import os, sys, argparse
 from . import __version__
 from pathlib import Path
+from tomlkit import parse, dumps
 from hdd.snippet import (
     load_json_file_if_not_exist_return_empty_dict,
     write_config_to_json_file,
@@ -19,6 +20,8 @@ except:
 
 hdd_template = package_absolute_path.joinpath("templates")
 
+project_folder = ["bootstrap", "migrate", "pipeline", "config", "services", "provider"]
+
 
 def main(**kwargs):
     parser = argparse.ArgumentParser(
@@ -27,101 +30,79 @@ def main(**kwargs):
         description="%(prog)s is a tools package",
         add_help=True,
     )
-
+    subparsers = parser.add_subparsers(dest="command")
     parser.add_argument(
         "-V", "--version", help="show %(prog)s version", action="store_true"
     )
-    parser.add_argument("init", help="init your %(prog)s project", nargs="?")
-    parser.add_argument("more_config", help="generate more config file", nargs="?")
+    init_parser = subparsers.add_parser("init", help="init your %(prog)s project")
+    init_parser.add_argument("--name", help="Project name")
 
     args = parser.parse_args()
 
     if args.version:
         print(f"hdd version is: {__version__}")
 
-    if args.init and args.init == "more_config":
-        if not project_absolute_path.joinpath("config").exists():
-            raise FileNotFoundError('must execute "hdd init" first')
+    if args.command == "init":
         try:
-            copy_template("config/project_config.json", "config/project_config.json")
-        except Exception:
-            raise IOError(
-                "Copying config template files failed. You can manually create them: config/project_config.json"
-            )
+            project_name = input("Project Name: ").strip() or args.name or "hdd_project"
+            version = input("Version(default 0.1.0): ").strip() or "0.1.0"
+            description = input("description: ").strip() or "one hdd project"
+            author = input("Author: ").strip() or "Anonymous"
+        except KeyboardInterrupt:
+            print("\n❌ 取消操作。")
+            sys.exit(0)
 
-    if args.init and args.init == "init":
         try:
-            make_project_dir()
+            package_name = make_project_dir(project_name)
         except Exception:
             raise IOError(
                 "There was an error creating the folder. Please check your execution permissions. Alternatively, you can creating by manually: bootstrap | migrate | pipeline | config | provider"
             )
 
         try:
-            copy_template("config/core_config.json", "config/core_config.json")
+            copy_template(f"pyproject.toml", f"{project_name}/pyproject.toml")
+            copy_template(
+                f"config/core_config.json", f"{package_name}/config/core_config.json"
+            )
+            copy_template(
+                f"config/project_config.json",
+                f"{package_name}/config/project_config.json",
+            )
         except Exception:
             raise IOError(
                 "Copying config template files failed. You can manually create them: config/core_config.json"
             )
 
         try:
-            copy_template("bootstrap/__init__.py", "bootstrap/__init__.py")
-            copy_template("bootstrap/boot_providers.py", "bootstrap/boot_providers.py")
-            copy_template("bootstrap/register_alias.py", "bootstrap/register_alias.py")
-            copy_template(
-                "bootstrap/register_providers.py", "bootstrap/register_providers.py"
-            )
-            copy_template("bootstrap/main.py", "main.py")
+            for folder in project_folder:
+                copy_template(
+                    f"bootstrap/__init__.py", f"{package_name}/{folder}/__init__.py"
+                )
+
+            copy_template(f"bootstrap/main.py", f"{package_name}/main.py")
         except Exception:
             print("Copying boot template files failed. You can manually create them")
 
-        core_config = read_template("config/core_config.json")
+        with open(f"{project_name}/pyproject.toml", "r", encoding="utf-8") as f:
+            pyproject = parse(f.read())
+
+        pyproject["tool"]["setuptools"]["packages"] = project_name
+        pyproject["project"]["name"] = project_name
+        pyproject["project"]["version"] = version
+        pyproject["project"]["authors"] = [{"name": author}]
+        pyproject["project"]["description"] = description
+
+        with open(f"{project_name}/pyproject.toml", "w", encoding="utf-8") as f:
+            f.write(dumps(pyproject))
 
         print(f"Init {parser.prog} project, Done", end="\n\n")
 
-        # connector = (
-        #     input("connector(mysql/sqLite/postgresql/...) :  ").lower() or "mysql"
-        # )
-        # host = input("host(localhost/...) :  ").lower() or "localhost"
-        # port = input("port(3306/...) :  ") or "3306"
-        # database = input("database :  ")
-        # username = input("username :  ")
-        # password = input("password :  ")
-        # format = input("format(dataframe/list) :  ") or "dataframe"
-        # core_config["db"]["connector"] = connector
-        # core_config["db"]["host"] = host
-        # core_config["db"]["port"] = port
-        # core_config["db"]["database"] = database
-        # core_config["db"]["username"] = username
-        # core_config["db"]["password"] = password
-        # core_config["db"]["format"] = format
 
-        # try:
-        #     write_config("config/core_config.json", core_config)
-        # except Exception:
-        #     print(
-        #         "write config to json failed. You can manually edit json file under config folder"
-        #     )
-
-
-def make_project_dir():
-    if not check_dir_exist("bootstrap"):
-        os.mkdir("bootstrap")
-
-    if not check_dir_exist("migrate"):
-        os.mkdir("migrate")
-
-    if not check_dir_exist("pipeline"):
-        os.mkdir("pipeline")
-
-    if not check_dir_exist("config"):
-        os.mkdir("config")
-
-    if not check_dir_exist("services"):
-        os.mkdir("services")
-
-    if not check_dir_exist("provider"):
-        os.mkdir("provider")
+def make_project_dir(project_name):
+    package_name = f"{project_name}/{project_name}"
+    for folder in project_folder:
+        os.makedirs(f"{package_name}/{folder}", exist_ok=True)
+    return package_name
 
 
 def copy_template(src, dst):
