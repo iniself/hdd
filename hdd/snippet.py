@@ -20,6 +20,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import inspect, importlib, threading, os, json, pprint, re
+from importlib.util import spec_from_file_location, module_from_spec
 
 DIRECTORY_SEPARATOR = os.sep
 import inspect
@@ -229,3 +230,10 @@ def detect_caller_package_path():
                     return Path(mod.__file__).parent
             except Exception:
                 return None
+
+
+def import_class_from_path(path: str, class_name: str):
+    spec = spec_from_file_location("dynamic_module", path)
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return getattr(module, class_name)

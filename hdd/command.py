@@ -20,7 +20,15 @@ except:
 
 hdd_template = package_absolute_path.joinpath("templates")
 
-project_folder = ["bootstrap", "migrate", "pipeline", "config", "services", "provider"]
+project_folder = [
+    "bootstrap",
+    "migrate",
+    "pipeline",
+    "config",
+    "services",
+    "provider",
+    "utils",
+]
 
 
 def main(**kwargs):
@@ -68,6 +76,10 @@ def main(**kwargs):
                 f"config/project_config.json",
                 f"{package_name}/config/project_config.json",
             )
+            copy_template(
+                f"utils/type_protocol.py",
+                f"{package_name}/utils/type_protocol.py",
+            )
         except Exception:
             raise IOError(
                 "Copying config template files failed. You can manually create them: config/core_config.json"
@@ -79,7 +91,7 @@ def main(**kwargs):
                     f"bootstrap/__init__.py", f"{package_name}/{folder}/__init__.py"
                 )
 
-            copy_template(f"bootstrap/main.py", f"{package_name}/main.py")
+            copy_template(f"main.py", f"{package_name}/main.py")
         except Exception:
             print("Copying boot template files failed. You can manually create them")
 

@@ -17,11 +17,6 @@
 #
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from typing import Literal, overload, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from hdd.service.config import ConfigManager
-    from hdd.service.pipeline import Pipeline
 
 from hdd.snippet import *
 
@@ -75,12 +70,6 @@ class Container(object):
 
     def make_with(self, abstract, parameters=[]):
         return self.make(abstract, parameters)
-
-    @overload
-    def make(self, key: Literal["config"]) -> "ConfigManager": ...
-
-    @overload
-    def make(self, key: Literal["pipeline"]) -> "Pipeline": ...
 
     def make(self, abstract, parameters=[]):
         is_alias = not is_list(abstract) and abstract in self.aliases
