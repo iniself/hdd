@@ -19,13 +19,10 @@
 
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-import builtins
 from typing import TYPE_CHECKING
 
-from hdd import core as _core
+from hdd import core
 from .utils.type_protocol import CoreProtocol
-
-builtins.core = _core
 
 if TYPE_CHECKING:
     core: CoreProtocol
