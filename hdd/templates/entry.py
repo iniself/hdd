@@ -18,9 +18,9 @@
 #
 
 
+from __future__ import absolute_import, division, print_function, unicode_literals
 import builtins
 from typing import TYPE_CHECKING
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from hdd import core as _core
 from .utils.type_protocol import CoreProtocol
