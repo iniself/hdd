@@ -86,10 +86,9 @@ def main(**kwargs):
             )
 
         try:
+            copy_template(f"entry.py", f"{package_name}/__init__.py")
             for folder in project_folder:
-                copy_template(
-                    f"bootstrap/__init__.py", f"{package_name}/{folder}/__init__.py"
-                )
+                copy_template(f"__init__.py", f"{package_name}/{folder}/__init__.py")
 
             copy_template(f"main.py", f"{package_name}/main.py")
         except Exception:
