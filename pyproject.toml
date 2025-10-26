@@ -2,12 +2,6 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["hdd"]
-
-[tool.setuptools.dynamic]
-version = {attr = "hdd.__version__"}
-
 [project]
 name = "hdd"
 dynamic = ["version"]
@@ -16,7 +10,6 @@ authors = [{ name = "Metaer" }]
 readme = ""
 license = { text = "MIT" }
 requires-python = ">=3.10"
-
 dependencies = [
     "tomlkit"
 ]
@@ -24,6 +17,16 @@ dependencies = [
 [project.scripts]
 hdd = "hdd.command:main"
 
-
 [project.optional-dependencies]
 dev = []
+
+[tool.setuptools.dynamic]
+version = {attr = "hdd.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hdd*"]
+
+[tool.setuptools.package-data]
+"hdd" = ["**/*"]
+
